@@ -27,13 +27,35 @@ class Usuario(
 
     fun comprarEntradas(evento: Evento, cantidad: Int): Boolean {
 		//TODO: Validar si el usuario puede comprar la cantidad de entradas... sino => mensaje de error y return false
+        val entradasCompradas = entradas[evento]?.size ?: 0
+        if (cantidad <= 0 || cantidad > MAXIMO_PERMITIDO - entradasCompradas) {
+            println("No puedes comprar entradas para este evento.") // Poner entradas disponibles que tenemos
+            return false
+        }
 
 		//TODO: Pedir al evento la venta de las entradas
 		// Si retorna null mensaje de error y return false
 
+        val nuevasEntradas = venderEntradas(cantidad)
+        if (nuevasEntradas == null) {
+            println("No hay suficientes entradas disponiblees para el evento ${evento.nombre}")
+            return false
+        }
+
+
+
 		//TODO: Si llega a este punto, se supone que el evento me 
 		//      ha vendido y retornado una lista de entradas.
 		//      Las agregamos a la lista de entradas del evento.
+
+        if (!entradas.containsKey(evento)) {
+            entradas[evento] = mutableListOf()
+
+            for (entrada in nuevasEntradas) {
+                entradas[evento]?.add(entrada)
+            }
+        }
+
         return true
     }
 
